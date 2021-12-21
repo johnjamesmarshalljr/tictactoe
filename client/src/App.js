@@ -3,19 +3,6 @@ import TicTacToe from './TicTacToe'
 import "./App.css";
 import { io } from "socket.io-client";
 
-
-// const connectSocket = async () => {
-//   const socket = await socketService
-//     .connect("http://localhost:9000")
-//     .catch((err) => {
-//       console.log("Error: ", err);
-//     });
-// };
-
-// useEffect(() => {
-//   connectSocket();
-// }, []);
-
 const App = () => {
   const [socket, setSocket] = useState(null);
   
