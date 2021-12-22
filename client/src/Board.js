@@ -1,7 +1,23 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as utils from './utils'
+import { io } from "socket.io-client";
 
 const Board = () => { 
+  const socket = io(`http://localhost:3000`);
+
+  socket.on('connect', () => {
+    socket.emit('gameBoard', squares)
+    socket.emit('custom-event', 10, "Hi", {a: 'a'})
+})
+
+useEffect(() => {
+  socket.emit('gameBoard', squares)
+  // socket.on('get-squares', (squaresObj) => {
+  //   setSquares(squaresObj)
+  // })
+  
+}, []);
+
     const [squares, setSquares] = useState([...Array(9)]);
   
     const nextValue = utils.getNext(squares)
