@@ -4,33 +4,39 @@ import { io } from "socket.io-client";
 
 const Board = () => { 
   const socket = io(`http://localhost:3000`);
+  const [squares, setSquares] = useState([...Array(9)]);
+    const [currentPlayer, setCurrentPlayer] = useState('X');
 
-  socket.on('connect', () => {
-    socket.emit('gameBoard', squares)
-    socket.emit('custom-event', 10, "Hi", {a: 'a'})
-})
-
-useEffect(() => {
-  socket.emit('gameBoard', squares)
-  // socket.on('get-squares', (squaresObj) => {
-  //   setSquares(squaresObj)
-  // })
-  
-}, []);
-
-    const [squares, setSquares] = useState([...Array(9)]);
-  
     const nextValue = utils.getNext(squares)
     const winner = utils.getWinner(squares)
     const status = utils.getStatus(winner, squares, nextValue)
+    
+  socket.on('connect', () => {
+    socket.emit('gameBoard', squares)
+    // socket.emit('custom-event', 10, "Hi", {a: 'a'})
+  })
+socket.on('set-square', (squares) => {
+  // console.log(squares)
+    setSquares(squares)
+  })
+// useEffect(() => {
+  
+//   // 
+// }, [nextValue, squares]);
+
   
     function selectSquare(square) {
-      if (winner || squares[square]) {
+      
+        if (winner || squares[square]) {
         return
       }
+
       const spreadSquares = [...squares]
       spreadSquares[square] = nextValue
-      setSquares(spreadSquares)
+      socket.emit('playTurn', (spreadSquares))
+  
+      // setSquares(spreadSquares)
+      
     }
   
     const clearAndRestart = () => {
