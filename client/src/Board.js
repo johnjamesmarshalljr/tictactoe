@@ -5,7 +5,6 @@ import { io } from "socket.io-client";
 const Board = () => { 
   const socket = io(`http://localhost:3000`);
   const [squares, setSquares] = useState([...Array(9)]);
-    const [currentPlayer, setCurrentPlayer] = useState('X');
 
     const nextValue = utils.getNext(squares)
     const winner = utils.getWinner(squares)
@@ -13,31 +12,19 @@ const Board = () => {
     
   socket.on('connect', () => {
     socket.emit('gameBoard', squares)
-    // socket.emit('custom-event', 10, "Hi", {a: 'a'})
   })
-socket.on('set-square', (squares) => {
-  // console.log(squares)
+  socket.on('set-square', (squares) => {
     setSquares(squares)
   })
-// useEffect(() => {
-  
-//   // 
-// }, [nextValue, squares]);
 
-  
-    function selectSquare(square) {
-      
-        if (winner || squares[square]) {
-        return
-      }
-
-      const spreadSquares = [...squares]
-      spreadSquares[square] = nextValue
-      socket.emit('playTurn', (spreadSquares))
-  
-      // setSquares(spreadSquares)
-      
+  function selectSquare(square) {
+    if (winner || squares[square]) {
+      return
     }
+    const spreadSquares = [...squares]
+    spreadSquares[square] = nextValue
+    socket.emit('playTurn', (spreadSquares))      
+  }
   
     const clearAndRestart = () => {
       setSquares(Array(9).fill(null))
