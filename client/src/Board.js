@@ -10,16 +10,30 @@ const Board = () => {
     const winner = utils.getWinner(squares)
     const status = utils.getStatus(winner, squares, nextValue)
     
+useEffect(() => {
+    return () => {
+        socket.disconnect();
+      }
+    }
+  )
+
+
   socket.on('connect', () => {
     socket.on('set-square', (squares) => {
       setSquares(squares)
     })
   })
   
+  socket.on('won', (squares) => {
+    clearAndRestart()
+  })
 
   function selectSquare(square) {
     if (winner || squares[square]) {
-      return
+      socket.emit('winner', (squares))
+       return () => {
+        socket.disconnect();
+      }
     }
     const spreadSquares = [...squares]
     spreadSquares[square] = nextValue
