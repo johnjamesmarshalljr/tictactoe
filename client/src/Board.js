@@ -5,26 +5,22 @@ import { io } from "socket.io-client";
 const Board = () => { 
   const socket = io(`http://localhost:3000`);
   const [squares, setSquares] = useState([...Array(9)]);
-
-    const nextValue = utils.getNext(squares)
-    const winner = utils.getWinner(squares)
-    const status = utils.getStatus(winner, squares, nextValue)
+  const nextValue = utils.getNext(squares)
+  const winner = utils.getWinner(squares)
+  const status = utils.getStatus(winner, squares, nextValue)
     
-useEffect(() => {
-  socket.on('connect', () => {
-    socket.on('set-square', (squares) => {
-      setSquares(squares)
+  useEffect(() => {
+    socket.on('connect', () => {
+      socket.on('set-square', (squares) => {
+        setSquares(squares)
+      })
+      socket.on('restart', (squares) => {
+        setSquares(squares)
+      })
     })
-  })
-  
-  socket.on('restart', (squares) => {
-    setSquares(squares)
-  })
-  return () => socket.off();
-}, [])
 
-
-  
+    return () => socket.off();
+  }, [])
 
   function selectSquare(square) {
     if (winner || squares[square]) {
@@ -35,17 +31,17 @@ useEffect(() => {
     socket.emit('playTurn', (spreadSquares))      
   }
   
-    const clearAndRestart = () => {
-      socket.emit('clear', Array(9).fill(null))
-    }
+  const clearAndRestart = () => {
+    socket.emit('clear', Array(9).fill(null))
+  }
   
-    function renderSquare(i) {
-      return (
-        <button className="square" onClick={() => selectSquare(i)}>
-          {squares[i]}
-        </button>
-      )
-    }
+  function renderSquare(i) {
+    return (
+      <button className="square" onClick={() => selectSquare(i)}>
+        {squares[i]}
+      </button>
+    )
+  }
   
     return (
       <div>

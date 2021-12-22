@@ -2,7 +2,6 @@ import { io } from "socket.io-client";
 
 export function getStatus(winner, squares, nextValue) {
   const socket = io(`http://localhost:3000`);
-
     if (winner) {
       socket.emit('winner', (squares))
         return `WINNER!!! ${winner}`
@@ -11,8 +10,6 @@ export function getStatus(winner, squares, nextValue) {
     }else {
       return `${nextValue}: You're Up! `
     }
-
-    // return winner ? `WINNER!!! ${winner}` : squares.every(Boolean) ? `A Tie` : `${nextValue}: You're Up! `
   }
   
  export function getNext(squares) {
