@@ -11,29 +11,24 @@ const Board = () => {
     const status = utils.getStatus(winner, squares, nextValue)
     
 useEffect(() => {
-    return () => {
-        socket.disconnect();
-      }
-    }
-  )
-
-
   socket.on('connect', () => {
     socket.on('set-square', (squares) => {
       setSquares(squares)
     })
   })
   
-  socket.on('won', (squares) => {
-    clearAndRestart()
+  socket.on('restart', (squares) => {
+    setSquares(squares)
   })
+  return () => socket.off();
+}, [])
+
+
+  
 
   function selectSquare(square) {
     if (winner || squares[square]) {
-      socket.emit('winner', (squares))
-       return () => {
-        socket.disconnect();
-      }
+      return
     }
     const spreadSquares = [...squares]
     spreadSquares[square] = nextValue
@@ -41,7 +36,7 @@ useEffect(() => {
   }
   
     const clearAndRestart = () => {
-      setSquares(Array(9).fill(null))
+      socket.emit('clear', Array(9).fill(null))
     }
   
     function renderSquare(i) {
@@ -70,7 +65,7 @@ useEffect(() => {
           {renderSquare(7)}
           {renderSquare(8)}
         </div>
-        <button className="restart" onClick={clearAndRestart}>
+        <button className="restart" onClick={() => clearAndRestart()}>
           restart
         </button>
       </div>

@@ -10,8 +10,17 @@ io.on('connection', (socket)=> {
         io.emit('set-square', (squares))
     })
     socket.on("winner", (squares) => {
-        console.log('game over')
-        io.emit('won', (squares))
+        socket.disconnect()
+        // console.log('game over')
+        // io.emit('won', (squares))
+    })
+    socket.on("clear", (squares) => {
+        io.emit('restart', (squares))
+        // console.log('game over')
+        // io.emit('won', (squares))
+    })
+    socket.on('disconnect', function(){
+        delete socket; 
     })
     
 })
