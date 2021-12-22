@@ -11,11 +11,11 @@ const Board = () => {
     const status = utils.getStatus(winner, squares, nextValue)
     
   socket.on('connect', () => {
-    socket.emit('gameBoard', squares)
+    socket.on('set-square', (squares) => {
+      setSquares(squares)
+    })
   })
-  socket.on('set-square', (squares) => {
-    setSquares(squares)
-  })
+  
 
   function selectSquare(square) {
     if (winner || squares[square]) {

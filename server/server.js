@@ -6,11 +6,8 @@ const io = require('socket.io')(server, {
     }
 });
 io.on('connection', (socket)=> {
-    socket.on("gameBoard", squares => {
-        console.log(squares)
-    })
     socket.on("playTurn", (squares) => {
-        socket.broadcast.emit('set-square', (squares))
+        io.emit('set-square', (squares))
     })
 })
 
